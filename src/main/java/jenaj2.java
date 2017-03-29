@@ -24,7 +24,9 @@ public class jenaj2 {
         try {
             now = getNow();
 
-            String outputFile = "C:\\Users\\co17\\LocalStuff\\MyStuff\\Projects\\jenaj2";
+            //String outputFile = "C:\\Users\\co17\\LocalStuff\\MyStuff\\Projects\\jenaj2";
+            String outputFile = "G:\\ShareOne\\Cliff\\Dev\\jenaj2";
+
 
             String ns_DocStruct = "http://repositori.com/sw/onto/DocStruct.owl";
             OntModel mod_DocStruct = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RULE_INF);
@@ -53,9 +55,12 @@ public class jenaj2 {
             Individual i3 = mod_new.createIndividual(ns + "#s1", Sentence);
             //Individual i3 = mod_new.createIndividual(ns + "#s1", word);
 
+
+
             String outputformat = "RDF/XML-ABBREV"; //Turtle RDF/XML RDF/XML-ABBREV
 
-            String rules = "@prefix j0: <" + ns_DocStruct + "#> . @prefix j1: <" + ns_gate + "#> . [rule1: (?x rdf:type j.0:Doc) -> (?x rdf:type j.1:word)]";
+            /*
+            String rules = "@prefix j0: <" + ns_DocStruct + "#> . @prefix j1: <" + ns_gate + "#> . [rule1: (?x rdf:type j0:Doc) -> (?x rdf:type j1:word)]";
             printIt(rules);
 
             Reasoner reasoner = new GenericRuleReasoner((Rule.parseRules(rules)));
@@ -67,13 +72,16 @@ public class jenaj2 {
             while(iter.hasNext()){
                 Statement stmt = iter.nextStatement();
                 printIt(stmt.getSubject().getLocalName() + " --- " + stmt.getObject().asResource().getLocalName());
-            }
+            }*/
             //printIt("----- Doc Struct ----------------------------------------");
             //mod_DocStruct.write(System.out, outputformat);
             //printIt("");
             //printIt("----- gate ----------------------------------------");
             //mod_gate.write(System.out, outputformat);
             //printIt("");
+            printIt("");
+            mod_LassoingRhetoric.write(System.out, outputformat);
+            printIt("");
             printIt("----- new ----------------------------------------");
             mod_new.write(System.out, outputformat);
 
