@@ -90,23 +90,7 @@ public class jenaj2 {
                 mod_new.add(s);
             }
 
-/*
-            ExtendedIterator<Statement> stmts = inf1.listStatements().filterDrop(new org.apache.jena.util.iterator.Filter<Statement>() {
-                @Override
-                public boolean accept(Statement o){
-                    return mod_new.contains(o);
-                }
-
-            });
-*/
-
-
-            printIt("----- inf ----------------------------------------");
-            //Model inf = ModelFactory.createDefaultModel().add(new StmtIteratorImpl(stmts));
-            //inf.write(System.out, outputformat);
-            printIt("----- inf ----------------------------------------");
-
-                    //printIt("----- Doc Struct ----------------------------------------");
+            //printIt("----- Doc Struct ----------------------------------------");
             //mod_DocStruct.write(System.out, outputformat);
             //printIt("");
             //printIt("----- gate ----------------------------------------");
