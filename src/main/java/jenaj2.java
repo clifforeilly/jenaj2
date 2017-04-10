@@ -1,15 +1,22 @@
+import org.apache.jena.atlas.iterator.Iter;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.impl.StmtIteratorImpl;
 import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
+import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.util.iterator.Filter;
+import org.apache.jena.vocabulary.RDF;
 
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -52,30 +59,54 @@ public class jenaj2 {
             OntClass t1 = mod_new.createClass(ns + "#test1");
             OntClass t2 = mod_new.createClass(ns + "#test2");
             Individual i1 = mod_new.createIndividual(ns + "#i1", t1);
-            //Individual i2 = mod_new.createIndividual(ns + "#d1", Doc);
+            Individual i2 = mod_new.createIndividual(ns + "#d1", Doc);
             //Individual i3 = mod_new.createIndividual(ns + "#s1", Sentence);
             //Individual i4 = mod_new.createIndividual(ns + "#t1", t1);
 
-
-
             String outputformat = "RDF/XML-ABBREV"; //Turtle RDF/XML RDF/XML-ABBREV
 
-
-            //String rules = "@prefix j0: <" + ns_DocStruct + "#> . @prefix j1: <" + ns_gate + "#> . [rule1: (?x rdf:type j0:Doc) -> (?x rdf:type j1:word)]";
-            String rules = "[rule1: (?x rdf:type " + ns + "#test1) -> (?x rdf:type " + ns + "#test2)]";
+            String rules = "[rule1: (?x rdf:type " + ns_DocStruct + "#Doc) -> (?x rdf:type " + ns_gate + "#word)]";
+            //String rules = "[rule1: (?x rdf:type " + ns + "#test1) -> (?x rdf:type " + ns + "#test2)]";
             printIt(rules);
 
             Reasoner reasoner = new GenericRuleReasoner((Rule.parseRules(rules)));
             reasoner.setDerivationLogging(true);
 
             InfModel inf1 = ModelFactory.createInfModel(reasoner, mod_new);
+            List<Statement> infs = new ArrayList<Statement>();
 
             StmtIterator iter = inf1.listStatements();
             while(iter.hasNext()){
                 Statement stmt = iter.nextStatement();
-                printIt(stmt.getSubject().getLocalName() + " --- " + stmt.getObject().asResource().getLocalName());
+                //printIt(stmt.getSubject().getLocalName() + " --- " + stmt.getPredicate().getLocalName() + " --- " + stmt.getObject().asResource().getLocalName());
+                if(!mod_new.contains(stmt))
+                {
+                    infs.add(stmt);
+                }
             }
-            //printIt("----- Doc Struct ----------------------------------------");
+
+            for(Statement s:infs)
+            {
+                mod_new.add(s);
+            }
+
+/*
+            ExtendedIterator<Statement> stmts = inf1.listStatements().filterDrop(new org.apache.jena.util.iterator.Filter<Statement>() {
+                @Override
+                public boolean accept(Statement o){
+                    return mod_new.contains(o);
+                }
+
+            });
+*/
+
+
+            printIt("----- inf ----------------------------------------");
+            //Model inf = ModelFactory.createDefaultModel().add(new StmtIteratorImpl(stmts));
+            //inf.write(System.out, outputformat);
+            printIt("----- inf ----------------------------------------");
+
+                    //printIt("----- Doc Struct ----------------------------------------");
             //mod_DocStruct.write(System.out, outputformat);
             //printIt("");
             //printIt("----- gate ----------------------------------------");
@@ -84,6 +115,7 @@ public class jenaj2 {
             //printIt("");
             //mod_LassoingRhetoric.write(System.out, outputformat);
             //printIt("");
+
             printIt("----- new ----------------------------------------");
             mod_new.write(System.out, outputformat);
 
